@@ -1,3 +1,22 @@
+// Rest API with Express
+
+/*
+endpoint: http://localhost:3000
+    GET /api/players
+    GET /api/players/:id
+    POST /api/players
+    PUT /api/players/:id
+    DELETE /api/players/:id
+
+REST: Representational State Transfer
+Create: POST
+Read: GET
+Update: PUT
+Delete: DELETE
+
+https://www.youtube.com/watch?v=lsMQRaeKNDk
+*/
+
 const Joi = require("joi");
 const express = require("express");
 const app = express();
