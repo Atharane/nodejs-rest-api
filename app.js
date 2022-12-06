@@ -51,6 +51,26 @@ app.post("/api/players", async (req, res) => {
   res.send(player);
 });
 
+app.put("/api/players/:name", (req, res) => {
+  const player = players.find((p) => p.name === req.params.name);
+  if (!player) {
+    res
+      .status(404)
+      .send(`The player with name ${req.params.name} was not found`);
+    return;
+  }
+
+  const { error } = validatePlayer(req.body);
+  if (error) {
+    res.status(400).send(error.details[0].message);
+    return;
+  }
+
+  player.franchise = req.body.franchise;
+  res.send(player);
+});
+
+
 // input validation
 const validatePlayer = (player) => {
   const schema = Joi.object({
