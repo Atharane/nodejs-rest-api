@@ -18,9 +18,10 @@ app.get("/api/players", (req, res) => {
 app.get("/api/players/:name", (req, res) => {
   const player = players.find((p) => p.name === req.params.name);
   if (!player)
-    res
+    return res
       .status(404)
       .send(`The player with name ${req.params.name} was not found`);
+
   res.send(player);
 });
 
@@ -37,10 +38,7 @@ app.post("/api/players", async (req, res) => {
 
   // Joi validation
   const { error } = validatePlayer(req.body);
-  if (error) {
-    res.status(400).send(error.details[0].message);
-    return;
-  }
+  if (error) return res.status(400).send(error.details[0].message);
 
   const player = {
     name: req.body.name,
@@ -53,23 +51,30 @@ app.post("/api/players", async (req, res) => {
 
 app.put("/api/players/:name", (req, res) => {
   const player = players.find((p) => p.name === req.params.name);
-  if (!player) {
-    res
+  if (!player)
+    return res
       .status(404)
       .send(`The player with name ${req.params.name} was not found`);
-    return;
-  }
 
   const { error } = validatePlayer(req.body);
-  if (error) {
-    res.status(400).send(error.details[0].message);
-    return;
-  }
+  if (error) return res.status(400).send(error.details[0].message);
 
   player.franchise = req.body.franchise;
   res.send(player);
 });
 
+app.delete("/api/players/:name", (req, res) => {
+  const player = players.find((p) => p.name === req.params.name);
+  if (!player)
+    return res
+      .status(404)
+      .send(`The player with name ${req.params.name} was not found`);
+
+  const index = players.indexOf(player);
+  players.splice(index, 1);
+
+  res.send(player);
+});
 
 // input validation
 const validatePlayer = (player) => {
